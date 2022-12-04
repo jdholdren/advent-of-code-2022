@@ -41,30 +41,32 @@
  *
  * Find the Elf carrying the most Calories. How many total Calories is that Elf carrying?
  */
+
+/*
+ * --- Part Two ---
+ * By the time you calculate the answer to the Elves' question, they've already realized that the Elf carrying the most Calories of food might eventually run out of snacks.
+ *
+ * To avoid this unacceptable situation, the Elves would instead like to know the total Calories carried by the top three Elves carrying the most Calories. That way, even if one of those Elves runs out of snacks, they still have two backups.
+ *
+ * In the example above, the top three Elves are the fourth Elf (with 24000 Calories), then the third Elf (with 11000 Calories), then the fifth Elf (with 10000 Calories). The sum of the Calories carried by these three elves is 45000.
+ *
+ * Find the top three Elves carrying the most Calories. How many Calories are those Elves carrying in total?*
+ */
+
+use std::fs;
+
 fn main() {
-    let input = "1000
-2000
-3000
-
-4000
-
-5000
-6000
-
-7000
-8000
-9000
-
-10000";
+    // Read in the input
+    let input = fs::read_to_string("./day_1/src/input.txt").expect("error reading input file");
 
     // These are the totals of the calories for each elf
     let mut cal_totals: Vec<i32> = Vec::new();
 
     let mut current_total = 0;
-    for line in input.split("\n") {
+    for line in input.split('\n') {
         // If it's a blank line, or EOF that's the end of a total, so push
         // `current_total` to the `cal_totals` vector
-        if line == "" {
+        if line.is_empty() {
             cal_totals.push(current_total);
             current_total = 0; // Reset the total
             continue;
@@ -74,9 +76,13 @@ fn main() {
         let n: i32 = line.parse().expect("line was not a valid number");
         current_total += n;
     }
+    cal_totals.push(current_total); // Let's make sure we didn't leave any left over
 
     // Give us the highest total
     cal_totals.sort();
     cal_totals.reverse();
-    println!("Highest total: {}", cal_totals[0]);
+    println!(
+        "Top 3 total: {}",
+        cal_totals[0] + cal_totals[1] + cal_totals[2]
+    );
 }
